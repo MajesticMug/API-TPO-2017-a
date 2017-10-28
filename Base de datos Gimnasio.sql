@@ -1,14 +1,16 @@
-if not exists(select * from sys.databases where name = 'api_gimnacio')
-	create database api_gimnacio;
+if not exists(select * from sys.databases where name = 'api_gimnasio')
+	create database api_gimnasio;
 go
 
-use api_gimnacio
+use api_gimnasio
 go
 
-create login TP_Gimnasio with password = '123'
+if not exists (select * from sys.sql_logins where name = 'TP_Gimnasio')
+	create login TP_Gimnasio with password = '123';
 go
 
-create user TP_Gimnasio for login TP_Gimnasio
+if not exists (select * from sys.sysusers where name = 'TP_Gimnasio')
+	create user TP_Gimnasio for login TP_Gimnasio;
 go
 
 EXEC sp_addrolemember 'db_datareader', 'TP_Gimnasio'
