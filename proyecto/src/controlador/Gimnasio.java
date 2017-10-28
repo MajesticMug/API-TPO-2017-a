@@ -1,15 +1,18 @@
 package controlador;
 
+import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
+import DAO.SocioDAO;
 import exceptions.AbonoException;
 import exceptions.ActividadException;
 import exceptions.AptoException;
 import exceptions.ClaseException;
+import exceptions.ConexionException;
 import exceptions.DeporteException;
 import exceptions.EmpleadoException;
 import exceptions.EmpresaException;
@@ -73,7 +76,16 @@ public class Gimnasio {
 		planes = new ArrayList<InscripcionCorporativa>();
 		socios = new ArrayList<Socio>();
 		mActual = new ComunicadorMail();
-		datosPrueba();
+		
+		/*
+		try
+		{
+			datosPrueba();
+		} catch (SocioException e)
+		{
+			e.printStackTrace();
+		}
+		*/
 	}
 
 	public static Gimnasio getInstancia() {
@@ -150,7 +162,7 @@ public class Gimnasio {
 		throw new SocioException("No existe el socio con el DNI: " + dni);
 	}
 
-	private void datosPrueba() {
+	private void datosPrueba() throws SocioException {
 
 		pruebaSocios();
 		pruebaDeportes();
@@ -255,7 +267,7 @@ public class Gimnasio {
 		altaEscalaSalarial(18000, 25000, "");
 	}
 
-	private void pruebaIngreso() {
+	private void pruebaIngreso() throws SocioException {
 		altaSocio("1", "Juan", "Martinez", "Chile 123", "4657-4657", "juan@gmail.com", "Activo");
 		vincularSocioEmpresa("1", "1");
 		altaActividad(1, "Soccer", "Activo");
@@ -281,7 +293,7 @@ public class Gimnasio {
 		altaApto("1", LocalDate.now(), "casca", "csaag", "Activo");
 	}
 
-	private void pruebaSocios() {
+	private void pruebaSocios() throws SocioException {
 		altaSocio("12345678", "Raul", "Perez", "Lima 123", "4304-3695", "raul@gmail.com", "Activo");
 		altaSocio("45678915", "Oscar", "Gomez", "Lima 888", "4304-3695", "oscarGomez@gmail.com", "Activo");
 		altaSocio("36975124", "Mario", "Gonzalez", "Independencia 888", "4304-3695", "mariogonzalez@gmail.com",
@@ -453,12 +465,22 @@ public class Gimnasio {
 	}
 
 	public void altaSocio(String dni, String nombre, String apellido, String domicilio, String telefono, String mail,
-			String estado) {
+			String estado) throws SocioException {
 		Socio socio;
 		try {
 			socio = buscarSocio(dni);
 		} catch (SocioException e) {
 			socio = new Socio(dni, nombre, apellido, domicilio, telefono, mail, estado);
+			try
+			{
+				SocioDAO.getInstancia().save(socio);
+			} catch (ConexionException e1)
+			{
+				throw new SocioException("No se pudo crear el socio.");
+			} catch (SQLException e1)
+			{
+				throw new SocioException("Problema en la conexion con la base de datos.");
+			}
 			socios.add(socio);
 		}
 

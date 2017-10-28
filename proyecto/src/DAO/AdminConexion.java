@@ -29,7 +29,7 @@ public class AdminConexion {
 	public Connection obtenerConexion() throws ConexionException {
 		Connection conexion = null;
 		String url, usu, pwd;
-		url = "jdbc:sqlserver://127.0.0.1"; // "\\dv:1433/AI4799__07"
+		url = "jdbc:sqlserver://localhost:1433;databaseName=api_gimnasio"; // "\\dv:1433/AI4799__07"
 		usu = "TP_Gimnasio";
 		pwd = "123";
 		try {

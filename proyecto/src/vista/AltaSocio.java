@@ -3,6 +3,7 @@ package vista;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -14,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import controlador.Gimnasio;
+import exceptions.SocioException;
 
 public class AltaSocio extends JFrame {
 
@@ -129,10 +131,17 @@ public class AltaSocio extends JFrame {
 		btnAlta.setBounds(111, 216, 302, 23);
 		btnAlta.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				sistema.altaSocio(tfDni.getText(), tfNombre.getText(), tfApellido.getText(), tfDomicilio.getText(),
-						tfTelefono.getText(), tfMail.getText(), comboBox.getSelectedItem().toString());
-				JOptionPane.showMessageDialog(null, "Socio creado correctamente");
-				limpiarPantalla();			}
+				try
+				{
+					sistema.altaSocio(tfDni.getText(), tfNombre.getText(), tfApellido.getText(), tfDomicilio.getText(),
+							tfTelefono.getText(), tfMail.getText(), comboBox.getSelectedItem().toString());
+					JOptionPane.showMessageDialog(null, "Socio creado correctamente");
+					limpiarPantalla();
+				} catch (SocioException e)
+				{
+					JOptionPane.showMessageDialog(null, e.getMessage());
+				}
+							}
 		});
 		getContentPane().add(btnAlta);
 

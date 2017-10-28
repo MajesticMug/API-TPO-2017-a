@@ -1,3 +1,22 @@
+if not exists(select * from sys.databases where name = 'api_gimnacio')
+	create database api_gimnacio;
+go
+
+use api_gimnacio
+go
+
+create login TP_Gimnasio with password = '123'
+go
+
+create user TP_Gimnasio for login TP_Gimnasio
+go
+
+EXEC sp_addrolemember 'db_datareader', 'TP_Gimnasio'
+go
+
+EXEC sp_addrolemember 'db_datawriter', 'TP_Gimnasio'
+go
+
 CREATE TABLE deportes
 (
 	id_deporte int not null IDENTITY(1,1),
